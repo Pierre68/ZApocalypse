@@ -1,0 +1,37 @@
+package fr.exodeus.zombies.Objects.Capabilities;
+
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+
+public class Capabilities {
+    
+    @CapabilityInject(IThirst.class)
+    public static Capability<IThirst> CAPABILITY_THIRST = null;
+    
+    public static void registerCapabilities(){
+        CapabilityManager.INSTANCE.register(IThirst.class, new CapabilityThirst(), Thirst.class);
+    }
+    
+    public static class CapabilityThirst implements IStorage<IThirst> {
+
+        @Override
+        public NBTBase writeNBT(Capability<IThirst> capability, IThirst instance, EnumFacing side) {
+            /*NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setInteger("Thirst", instance.getThirst());*/// TODO ?
+            return null;
+        }
+
+        @Override
+        public void readNBT(Capability<IThirst> capability, IThirst instance, EnumFacing side, NBTBase nbt) {
+            // TODO Auto-generated method stub
+            
+        }
+        
+    }
+    
+}

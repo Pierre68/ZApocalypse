@@ -1,0 +1,55 @@
+package fr.exodeus.zombies.Common.Saver.Network;
+
+import fr.exodeus.zombies.Objects.Game.Thirst.ThirstLogic;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+public class PacketUpdateClient implements IMessage {
+
+    private float level;
+    private float saturation;
+    private boolean poisoned;
+    //private float temperature;
+
+    public PacketUpdateClient() {
+    }
+
+    public PacketUpdateClient(ThirstLogic stats) {
+        this.level = stats.thirstLevel;
+        this.saturation = stats.thirstSaturation;
+        this.poisoned = stats.isPoisoned;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buffer) {
+        level = buffer.readFloat();
+        saturation = buffer.readFloat();
+        poisoned = buffer.readBoolean();
+
+    }
+
+    @Override
+    public void toBytes(ByteBuf buffer) {
+        buffer.writeFloat(level);
+        buffer.writeFloat(saturation);
+        buffer.writeBoolean(poisoned);
+        
+    }
+
+    public void handleClientSide() {
+        //ClientSideStats.getInstance().thirstLevel = level;TODO
+        //ClientSideStats.getInstance().thirstSaturation = saturation;TODO
+        //ClientSideStats.getInstance().isPoisoned = poisoned;TODO
+
+    }
+
+    public static class Handler implements IMessageHandler<PacketUpdateClient, IMessage> {
+        @Override
+        public IMessage onMessage(PacketUpdateClient message, MessageContext ctx) {
+            message.handleClientSide();
+            return null;
+        }
+    }
+}

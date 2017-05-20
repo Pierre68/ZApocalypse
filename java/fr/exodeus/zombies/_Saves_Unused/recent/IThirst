@@ -1,0 +1,10 @@
+package fr.exodeus.zombies.Objects.Capabilities;
+
+public interface IThirst {
+    int getThirst();
+    
+    void doThirst();
+    
+    void drink();
+    
+}

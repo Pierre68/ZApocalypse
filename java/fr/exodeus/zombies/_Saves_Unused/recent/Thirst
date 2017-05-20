@@ -1,0 +1,72 @@
+package fr.exodeus.zombies.Objects.Capabilities;
+
+import java.awt.geom.NoninvertibleTransformException;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.storage.IPlayerFileData;
+import net.minecraftforge.common.util.INBTSerializable;
+
+public class Thirst implements IThirst, INBTSerializable<NBTTagCompound>{
+    
+    private int thirst;
+    private int maxthirst;
+    
+    private Runnable doThirst, drink;
+    
+    
+    public Thirst(Runnable doThirst, Runnable drink) {
+        this.maxthirst = 20;
+        
+        this.doThirst = doThirst;
+        this.drink = drink;
+        
+        
+    }
+    
+    public void setThirst(int thirst){
+        this.thirst = thirst;
+    }
+
+    @Override
+    public int getThirst() {
+        return this.thirst;
+    }
+
+    @Override
+    public void doThirst() {
+        this.thirst--;
+        if(this.thirst < 0){
+            this.thirst = 0;
+        }
+        this.doThirst.run();
+        
+        
+        
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void drink() {
+        this.drink.run();
+    }
+    
+    //============================================================
+
+
+    private final String nbttag_thirst = "Thirst";
+    
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger(nbttag_thirst, this.thirst);
+        return nbt;
+    }
+
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        this.thirst = nbt.getInteger(nbttag_thirst);
+    }
+
+}

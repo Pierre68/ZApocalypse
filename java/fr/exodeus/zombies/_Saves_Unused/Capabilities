@@ -1,0 +1,96 @@
+package fr.exodeus.zombies.Common.Saver.Network.Capabilities;
+
+import java.util.concurrent.Callable;
+
+import fr.exodeus.zombies.Common.MainZombies;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
+
+public class Capabilities implements ICapabilityProvider, INBTSerializable<NBTTagCompound> {
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return MainZombies.ZOMBIESPLUS_CAP != null && capability == MainZombies.ZOMBIESPLUS_CAP;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return MainZombies.ZOMBIESPLUS_CAP != null && capability == MainZombies.ZOMBIESPLUS_CAP ? (T) this : null;
+    }
+
+    // ==========================================================
+
+    public int thirstLevel;
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setInteger("thirstLevel", this.thirstLevel);
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound compound) {
+        this.thirstLevel = compound.getInteger("thirstLevel");
+    }
+
+    // =================================================
+
+    public Capabilities(EntityPlayer player) {
+        this.thirstLevel = 0;
+        this.player = player;
+    }
+
+    public void setStats(int thirstLevel) {
+        this.thirstLevel = thirstLevel;
+    }
+
+    public void sync(EntityPlayer player) {
+        this.player = player;
+
+        PacketCapabilities packet = new PacketCapabilities(this);
+        if (!this.player.worldObj.isRemote) {
+            // EntityPlayerMP playerMP = (EntityPlayerMP)player;
+            MainZombies.network.sendTo(packet, (EntityPlayerMP) player);
+        } else {
+            MainZombies.network.sendToServer(packet);
+        }
+    }
+
+    // =====================================================
+
+    private EntityPlayer player;
+
+    public static void register() {
+        CapabilityManager.INSTANCE.register(Capabilities.class, new Capabilities.Storage(), new Capabilities.Factory());
+    }
+
+    public static class Storage implements Capability.IStorage<Capabilities> {
+
+        @Override
+        public NBTBase writeNBT(Capability<Capabilities> capability, Capabilities instance, EnumFacing side) {
+            return null;
+        }
+
+        @Override
+        public void readNBT(Capability<Capabilities> capability, Capabilities instance, EnumFacing side, NBTBase nbt) {
+
+        }
+
+    }
+
+    public static class Factory implements Callable<Capabilities> {
+        @Override
+        public Capabilities call() throws Exception {
+            return null;
+        }
+    }
+
+}
