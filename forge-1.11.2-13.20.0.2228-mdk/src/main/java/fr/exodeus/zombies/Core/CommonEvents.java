@@ -40,6 +40,9 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public void onMonsterSpawn(EntityJoinWorldEvent event) {
+		
+		if(event.getWorld().isRemote)
+			return;
 
 		if (event.getEntity() instanceof EntityZombie) {
 			event.setCanceled(true);
@@ -61,6 +64,9 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public void onEntityGetHurt(LivingHurtEvent event) {
+		
+		if(event.getEntityLiving().getEntityWorld().isRemote)
+			return;
 
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 
@@ -88,6 +94,9 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public void onPlayerUpdate(LivingUpdateEvent event) {
+		
+		if(event.getEntityLiving().getEntityWorld().isRemote)
+			return;
 
 		if (!(event.getEntityLiving() instanceof EntityPlayer))
 			return;

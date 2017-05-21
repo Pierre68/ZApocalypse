@@ -30,7 +30,7 @@ public class PureWater extends Item{
 	public static CreativeTabs creativeTab = MainZombies.tabZombies;
 
 	public static void init() {
-		pureWater = new ItemDrinks(8f,2f).setUnlocalizedName("pure_water").setMaxStackSize(maxStackSize)
+		pureWater = new ItemDrinks(8,2f).setUnlocalizedName("pure_water").setMaxStackSize(maxStackSize)
 				.setCreativeTab(creativeTab);
 	}
 

@@ -26,7 +26,6 @@ import fr.exodeus.zombies.Objects.Items.Food.Donut;
 import fr.exodeus.zombies.Objects.Items.Food.PurifiedFlesh;
 import fr.exodeus.zombies.Objects.Items.Usable.Antibiotic;
 import fr.exodeus.zombies.Objects.Items.Usable.Bandage;
-import fr.exodeus.zombies.ServerSide.PlayerContainer;
 import fr.exodeus.zombies.ServerSide.ServerEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,8 +44,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenders() {
 		//Usable Items
-		//Antibiotic.registerItemRender();
-		//Bandage.registerItemRender();
+		Antibiotic.registerItemRender();
+		Bandage.registerItemRender();
 		//Simple Items
 		CleanChain.registerItemRender();
 		IronNugget.registerItemRender();
@@ -57,7 +56,7 @@ public class ClientProxy extends CommonProxy {
 		Donut.registerItemRender();
 		PurifiedFlesh.registerItemRender();
 		//Drinks
-		//PureWater.registerItemRender();
+		PureWater.registerItemRender();
 		//Entities
 		ZombieButcher.registerRender();
 		ZombieCivil.registerRender();
@@ -74,7 +73,7 @@ public class ClientProxy extends CommonProxy {
 		/*network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_NAME);
 		network.registerMessage(PacketCapabilities.ClientHandler.class, PacketCapabilities.class, 3, Side.CLIENT);
 		network.registerMessage(PacketCapabilities.ServerHandler.class, PacketCapabilities.class, 3, Side.SERVER);  
-		Ancien code*/
+		Ancien code NE PAS FAIRE*/
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package fr.exodeus.zombies.Objects.Items.Effects;
 
+import fr.exodeus.zombies.Core.MainZombies;
 import fr.exodeus.zombies.Objects.Game.Thirst.ThirstLogic;
-import fr.exodeus.zombies.ServerSide.PlayerContainer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -11,14 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class ItemDrinks extends Item {
 
 	// ===========================================
 
-	private float thirstRegeneration;
+	private int thirstRegeneration;
 	private float thirstSaturation;
 
 	private boolean hasAlcohol = false;
@@ -26,11 +25,11 @@ public class ItemDrinks extends Item {
 
 	private float poisonRisk = 0;
 
-	private ItemStack usedItem = new ItemStack(Items.GLASS_BOTTLE);
+	private ItemStack usedItem = new ItemStack(Items.GLASS_BOTTLE,1);
 
 	// ===========================================
 
-	public ItemDrinks(float thirstRegeneration, float thirstSaturation) {
+	public ItemDrinks(int thirstRegeneration, float thirstSaturation) {
 		this.thirstRegeneration = thirstRegeneration;
 		this.thirstSaturation = thirstSaturation;
 	}
@@ -53,28 +52,37 @@ public class ItemDrinks extends Item {
 		this.usedItem = itemStack;
 	}
 
+	
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		EntityPlayer entityplayer = entityLiving instanceof EntityPlayer ? (EntityPlayer) entityLiving : null;
 
+		if(worldIn.isRemote)
+			return stack;
+		
+		usedItem = new ItemStack(Items.GLASS_BOTTLE,1);
+		
 		if (entityplayer == null || !entityplayer.capabilities.isCreativeMode) {
 			stack.shrink(1);
 		}
 
 		if (entityplayer != null && !worldIn.isRemote && !entityplayer.capabilities.isCreativeMode) {
 
-			if (PlayerContainer.containsPlayer(entityplayer))
-				PlayerContainer.getPlayer(entityplayer).getThirstStats().onPlayerDrink(thirstRegeneration,
-						thirstSaturation, poisonRisk);
+			ThirstLogic.onPlayerDrink(entityplayer, thirstRegeneration, thirstSaturation, poisonRisk);
 
 		}
 
 		if (entityplayer == null || !entityplayer.capabilities.isCreativeMode) {
 			if (stack.isEmpty()) {
+				//entityplayer.inventory.addItemStackToInventory(usedItem);
+				//entityplayer.inventory.markDirty();
+				MainZombies.logString("test2");
 				return usedItem;
-			}
+			}else
 
 			if (entityplayer != null) {
 				entityplayer.inventory.addItemStackToInventory(usedItem);
+				entityplayer.inventory.markDirty();
+				MainZombies.logString("test1");
 			}
 		}
 

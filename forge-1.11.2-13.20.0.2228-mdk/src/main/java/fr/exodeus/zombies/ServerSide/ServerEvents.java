@@ -8,19 +8,13 @@ import fr.exodeus.zombies.Core.Reference;
 import fr.exodeus.zombies.Objects.Capabilities.Capabilities;
 import fr.exodeus.zombies.Objects.Capabilities.Capabilities.IPlayerExtendedProperties;
 import fr.exodeus.zombies.Objects.Game.Nature.NatureLogic;
-import net.minecraft.block.BlockSapling;
-import net.minecraft.block.state.IBlockState;
+import fr.exodeus.zombies.Objects.Game.Thirst.ThirstLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -32,7 +26,6 @@ import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -49,81 +42,53 @@ public class ServerEvents {
 	public void playerTick(PlayerTickEvent event) { // RUN BOTH SIDES ?? TODO
 
 		if (event.side == Side.SERVER) {
-			MainZombies.proxy.serverTick(event.player);
-
-			PlayerContainer handler = PlayerContainer.getPlayer(event.player);
-			if (handler != null) {
-				handler.getThirstStats().onTick();
-
-			}
+			ThirstLogic.onTick(event.player);
 		}
 	}
 
 	@SubscribeEvent
-	public void onLogin(PlayerLoggedInEvent event) { // RUN SERVERSIDE ONLY
-		/*
-		 * if (!PlayerContainer.containsPlayer(event.player))
-		 * PlayerContainer.addPlayer(event.player);
-		 */
-
+	public void onLogin(PlayerLoggedInEvent event) {
+		// RUN SERVERSIDE ONLY
 	}
 
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent event) {
-		PlayerContainer.removePlayer(event.player);
-
 	}
 
 	@SubscribeEvent
-	public void playerDeath(LivingDeathEvent event) { // RUN SERVERSIDE ONLY
-
-		if (!(event.getEntityLiving() instanceof EntityPlayer))
-			// NE RIEN METTRE AVANT CECI !
-			return;
-
-		MainZombies.logString("playerDeath");
-
-		PlayerContainer handler = PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving());
-		if (handler != null) {
-			PlayerContainer.removePlayer((EntityPlayer) event.getEntityLiving());
-			MainZombies.logString("containerDestroyed");
-			
-			
-			MainZombies.logString("" + PlayerContainer.getLength());
-		}
-
+	public void playerDeath(LivingDeathEvent event) {
+		// RUN SERVERSIDE ONLY
 	}
 
 	@SubscribeEvent
-	public void onPlayerRespawn(PlayerRespawnEvent event) { // RUN SERVERSIDE
-															// ONLY
-
-		// PlayerContainer.getPlayer(event.player).getThirstStats().onRespawn();
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		// RUN SERVERSIDE ONLY
 	}
 
 	// ==========================================================
 
 	@SubscribeEvent
-	public void playerRegeneration(LivingHealEvent event) { // RUN SERVERSIDE
-															// ONLY
+	public void playerRegeneration(LivingHealEvent event) {
+		// RUN SERVERSIDE ONLY
 
 		if (!(event.getEntityLiving() instanceof EntityPlayer))
 			return;
-
-		PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving()).getThirstStats().onHeal(event);
+		
+		if(event.getEntityLiving().isEntityAlive()){
+			ThirstLogic.onHeal(event);
+		}
 
 	}
 
 	// ==========================================================
 
 	@SubscribeEvent
-	public void onAttack(AttackEntityEvent attack) {
-		if(attack.getEntity().getEntityWorld().isRemote)
+	public void onAttack(AttackEntityEvent event) {
+		if(event.getEntity().getEntityWorld().isRemote)
 			return;
-		PlayerContainer player = PlayerContainer.getPlayer(attack.getEntityPlayer());
-		if ((player != null)) {
-			player.getThirstStats().onAttack();
-		}
+		
+		ThirstLogic.onAttack(event.getEntityPlayer());
+		
 	}
 
 	@SubscribeEvent
@@ -131,8 +96,7 @@ public class ServerEvents {
 		if(hurt.getEntity().getEntityWorld().isRemote)
 			return;
 		if (hurt.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) hurt.getEntityLiving();
-			PlayerContainer.getPlayer(player).getThirstStats().onHurt();
+			ThirstLogic.onHurt((EntityPlayer) hurt.getEntityLiving());
 		}
 	}
 
@@ -141,10 +105,7 @@ public class ServerEvents {
 		if(event.getPlayer().getEntityWorld().isRemote)
 			return;
 		if (event.getPlayer() != null) {
-			PlayerContainer handler = PlayerContainer.getPlayer(event.getPlayer());
-			if ((handler != null)) {
-				handler.getThirstStats().onBlockBreak();
-			}
+			ThirstLogic.onBlockBreak(event.getPlayer());
 			NatureLogic.onPlayerBlockBreak(event);
 		}
 	}
@@ -169,13 +130,11 @@ public class ServerEvents {
 	@SubscribeEvent
 	public void onPotionDrinkFinish(LivingEntityUseItemEvent.Finish event) {
 		
+		
 		if(event.getEntity().getEntityWorld().isRemote)
 			return;
 
 		if (!(event.getEntityLiving() instanceof EntityPlayer))
-			return;
-		
-		if (event.getItem().getItem() != Items.POTIONITEM)
 			return;
 
 		if (!LAST_ITEM.containsKey(event.getEntityLiving().getName()))
@@ -183,29 +142,27 @@ public class ServerEvents {
 
 		String name = LAST_ITEM.get(event.getEntityLiving().getName());
 
-		MainZombies.logString(name + " test");
+		MainZombies.logString(name + " test name");
 
 		LAST_ITEM.remove(event.getEntityLiving().getName());
+		
+		EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 
 		switch (name) {
 		case "minecraft:water":
-			PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving()).getThirstStats().onPlayerDrink(4, 0.8f,
-					0.4f);
+			ThirstLogic.onPlayerDrink(player, 4, 0.8f, 0.6f);
 			break;
 
 		case "minecraft:thick":
-			PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving()).getThirstStats().onPlayerDrink(5, 1.5f,
-					0.1f);
+			ThirstLogic.onPlayerDrink(player, 5, 1.5f, 0.2f);
 			break;
 
 		case "minecraft:mundane":
-			PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving()).getThirstStats().onPlayerDrink(5, 1.5f,
-					0.1f);
+			ThirstLogic.onPlayerDrink(player, 5, 1.5f, 0.2f);
 			break;
 
 		case "minecraft:awkward":
-			PlayerContainer.getPlayer((EntityPlayer) event.getEntityLiving()).getThirstStats().onPlayerDrink(5, 1.5f,
-					0.1f);
+			ThirstLogic.onPlayerDrink(player, 5, 1.5f, 0.4f);
 			break;
 
 		default:
@@ -255,8 +212,8 @@ public class ServerEvents {
 	}
 
 	@SubscribeEvent
-	public void onSpawn(EntityJoinWorldEvent event) { // RUN CLIENT AND
-														// SERVERSIDE
+	public void onSpawn(EntityJoinWorldEvent event) {
+		// RUN CLIENT AND SERVERSIDE
 
 		if (event.getWorld().isRemote)
 			return;
@@ -265,8 +222,7 @@ public class ServerEvents {
 			EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
 			if (player != null) {
 				// Capabilities.syncServerDataToClient(p); //TODO
-				if (!PlayerContainer.containsPlayer(player))
-					PlayerContainer.addPlayer(player);
+				
 			}
 		}
 	}
@@ -277,6 +233,7 @@ public class ServerEvents {
 		if (evt.getEntity() instanceof EntityPlayer == false) {
 			return;// mod compatibility: IE Tinkers construct
 		}
+		
 
 		MainZombies.logString("AttachCapabilities");
 

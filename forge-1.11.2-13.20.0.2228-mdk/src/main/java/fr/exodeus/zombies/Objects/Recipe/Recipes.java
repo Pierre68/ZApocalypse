@@ -4,6 +4,7 @@ import fr.exodeus.zombies.Objects.Items.CleanChain;
 import fr.exodeus.zombies.Objects.Items.IronNugget;
 import fr.exodeus.zombies.Objects.Items.RustyChain;
 import fr.exodeus.zombies.Objects.Items.SandDust;
+import fr.exodeus.zombies.Objects.Items.Drinks.PureWater;
 import fr.exodeus.zombies.Objects.Items.Food.CookedFlesh;
 import fr.exodeus.zombies.Objects.Items.Food.PurifiedFlesh;
 import net.minecraft.init.Blocks;
@@ -54,6 +55,8 @@ public class Recipes {
 
 		GameRegistry.addSmelting(PurifiedFlesh.purified_flesh, new ItemStack(CookedFlesh.cooked_flesh), 0.1f);
 		GameRegistry.addSmelting(RustyChain.rusty_chain, new ItemStack(CleanChain.clean_chain), 0.1f);
+		
+		GameRegistry.addSmelting(Items.POTIONITEM, new ItemStack(PureWater.pureWater), 0.1f);
 
 	}
 

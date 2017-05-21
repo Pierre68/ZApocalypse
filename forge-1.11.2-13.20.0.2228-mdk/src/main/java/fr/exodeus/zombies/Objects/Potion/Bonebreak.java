@@ -71,7 +71,8 @@ public class Bonebreak extends Potion {
 						new PotionEffect(Potion.getPotionById(2), 300 + r.nextInt(500), r.nextInt(2 + lvl))); // move
 																												// slow
 																												// down
-				Infection.infectPlayer(player, 0);
+				//Infection.infectPlayer(player, 0);
+				Infection.addPlayerInfectionLevel(player, 1);
 			}
 			break;
 

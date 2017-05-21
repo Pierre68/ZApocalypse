@@ -51,14 +51,16 @@ public class Infection extends Potion {
 		Random r = new Random();
 		int lvl = player.getActivePotionEffect(infection).getAmplifier() + 1;
 
-		switch (r.nextInt(20000 / lvl)) {
+		switch ((int)r.nextInt(6000 / lvl)) {
 
 		case 0:
 			player.attackEntityFrom(DamageSource.GENERIC, 1);
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(15), 40 + r.nextInt(100) * lvl, 0)); // blindness
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(15), 40 + r.nextInt(100) * lvl, 0));
+			// blindness
 			break;
 		case 1:
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 300 + r.nextInt(200) * lvl, 0)); // confusion
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 100 + r.nextInt(100) * lvl, 0));
+			// confusion
 			break;
 		case 2:
 			player.playSound(SoundEvents.AMBIENT_CAVE, 1f, 1f);
@@ -67,19 +69,34 @@ public class Infection extends Potion {
 			player.playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT, 1f, 1f);
 			break;
 		case 4:
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 300 + r.nextInt(500), r.nextInt(2)));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 500 + r.nextInt(600) * lvl, r.nextInt(2)));
+			// Slow
 			break;
 		case 5:
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 300 + r.nextInt(500), r.nextInt(2))); // dig
-																													// slow
-																													// down
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 500 + r.nextInt(600) * lvl, r.nextInt(2)));
+			// dig slow down
 			break;
 		case 6:
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(17), 300 + r.nextInt(500), r.nextInt(2))); // hunger
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(17), 300 + r.nextInt(500), r.nextInt(2)));
+			// hunger
 			break;
 		case 7:
 			player.addPotionEffect(
-					new PotionEffect(Potion.getPotionById(18), 300 + r.nextInt(500), r.nextInt(2) + lvl)); // weakness
+					new PotionEffect(Potion.getPotionById(18), 500 + r.nextInt(600) * lvl, r.nextInt(2) + lvl));
+			// weakness
+			break;
+		case 8:
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(19), 150 + r.nextInt(300), 0));
+			// poison
+			break;
+		case 9:
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 500 + r.nextInt(600) * lvl, r.nextInt(2)));
+			// dig slow down
+			break;
+		case 10:
+			player.addPotionEffect(
+					new PotionEffect(Potion.getPotionById(18), 500 + r.nextInt(600) * lvl, r.nextInt(2) + lvl));
+			// weakness
 			break;
 
 		}
@@ -101,30 +118,44 @@ public class Infection extends Potion {
 
 		// ------------------
 
-		if (event.getEntityLiving().isPotionActive(Infection.infection)) {
-
-			int lvl = event.getEntityLiving().getActivePotionEffect(Infection.infection).getAmplifier();
-
-			// Infection.infectPlayer(player, lvl + 1); MARCHE PAS
-			infectPlayer(player, lvl + 1);
-
-		} else {
-
-			// Infection.infectPlayer(player, 0); MARCHE PAS
-			infectPlayer(player, 0);
-		}
+		addPlayerInfectionLevel(player, 1);
+		/*
+		 * if (event.getEntityLiving().isPotionActive(Infection.infection)) {
+		 * 
+		 * int lvl =
+		 * event.getEntityLiving().getActivePotionEffect(Infection.infection).
+		 * getAmplifier();
+		 * 
+		 * // Infection.infectPlayer(player, lvl + 1); MARCHE PAS
+		 * infectPlayer(player, lvl + 1);
+		 * 
+		 * } else {
+		 * 
+		 * // Infection.infectPlayer(player, 0); MARCHE PAS infectPlayer(player,
+		 * 0); }
+		 */
 	}
 
-	public static void infectPlayer(EntityLivingBase playerIn, Integer lvl) {
+	public static int addPlayerInfectionLevel(EntityPlayer player, int addedLevel) {
+		int finalLevel = addedLevel - 1;
+
+		if (player.isPotionActive(Infection.infection))
+			finalLevel = finalLevel + player.getActivePotionEffect(Infection.infection).getAmplifier() + 1;
+
+		infectPlayer(player, finalLevel);
+		return finalLevel;
+	}
+
+	private static void infectPlayer(EntityPlayer playerIn, Integer lvl) {
 
 		EntityPlayer player = (EntityPlayer) playerIn;
 
 		if (player.getHealth() == 0)
 			return;
-		
+
 		if (lvl != 0)
 			player.sendMessage(new TextComponentString("§4Your infection is getting worse"));
-		if (lvl == 0){
+		if (lvl == 0) {
 			player.sendMessage(new TextComponentString("§4You have been infected !"));
 			player.sendMessage(new TextComponentString("§7Take an Antibiotic as fast as possible"));
 		}

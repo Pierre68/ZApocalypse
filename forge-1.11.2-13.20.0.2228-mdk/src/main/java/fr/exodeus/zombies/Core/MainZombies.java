@@ -1,7 +1,5 @@
 package fr.exodeus.zombies.Core;
 
-import java.nio.channels.NetworkChannel;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +8,7 @@ import fr.exodeus.zombies.Objects.Capabilities.Capabilities;
 import fr.exodeus.zombies.Objects.Capabilities.Capabilities.IPlayerExtendedProperties;
 import fr.exodeus.zombies.Objects.Capabilities.PacketSyncPlayerData;
 import fr.exodeus.zombies.Objects.Entity.EntityCreator;
-import fr.exodeus.zombies.Objects.Game.Thirst.ThirstRender;
+import fr.exodeus.zombies.Objects.Game.Thirst.ThirstLogic;
 import fr.exodeus.zombies.Objects.Items.CleanChain;
 import fr.exodeus.zombies.Objects.Items.IronNugget;
 import fr.exodeus.zombies.Objects.Items.RustyChain;
@@ -26,21 +24,8 @@ import fr.exodeus.zombies.Objects.Potion.Infection;
 import fr.exodeus.zombies.Objects.Recipe.Recipes;
 import fr.exodeus.zombies.Objects.Tab.ZombiesTab;
 import fr.exodeus.zombies.Proxy.CommonProxy;
-import fr.exodeus.zombies.ServerSide.PlayerContainer;
-import fr.exodeus.zombies.ServerSide.ServerEvents;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -48,8 +33,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -64,7 +47,7 @@ public class MainZombies {
 	
 	public SimpleNetworkWrapper network;
 	
-	//@CapabilityInject(IPlayerExtendedProperties.class)TODO
+	@CapabilityInject(IPlayerExtendedProperties.class)
 	public static final Capability<IPlayerExtendedProperties> CAPABILITY_THIRST = null;
 	
 	@Instance
@@ -84,37 +67,37 @@ public class MainZombies {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		//Simple Items
-		//CleanChain.init();
-		//CleanChain.register();
-		//IronNugget.init();
-		//IronNugget.register();
-		//RustyChain.init();
-		//RustyChain.register();
-		//SandDust.init();
-		//SandDust.register();
+		CleanChain.init();
+		CleanChain.register();
+		IronNugget.init();
+		IronNugget.register();
+		RustyChain.init();
+		RustyChain.register();
+		SandDust.init();
+		SandDust.register();
 		//Food Items
-		//CookedFlesh.init();
-		//CookedFlesh.register();
-		//Donut.init();
-		//Donut.register();
-		//PurifiedFlesh.init();
-		//PurifiedFlesh.register();
-		//Drinks
-		//PureWater.init();
-		//PureWater.register();
+		CookedFlesh.init();
+		CookedFlesh.register();
+		Donut.init();
+		Donut.register();
+		PurifiedFlesh.init();
+		PurifiedFlesh.register();
 		//Usable Items
-		//Antibiotic.init();
-		//Antibiotic.register();
-		//Bandage.init();
-		//Bandage.register();
+		Antibiotic.init();
+		Antibiotic.register();
+		Bandage.init();
+		Bandage.register();
+		//Drinks
+		PureWater.init();
+		PureWater.register();
 		
 		//Starting Network
-		//network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
-		
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
+	
 		//Capabilities
-		//network.registerMessage(PacketSyncPlayerData.class, PacketSyncPlayerData.class, PacketSyncPlayerData.ID, Side.CLIENT);
+		network.registerMessage(PacketSyncPlayerData.class, PacketSyncPlayerData.class, PacketSyncPlayerData.ID, Side.CLIENT);
 		
-		//Capabilities.register();
+		Capabilities.register();
 		
 		
 	}
@@ -122,22 +105,24 @@ public class MainZombies {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		
-		//Recipes.loadRecipes();
+		Recipes.loadRecipes();
 		
-		//EntityCreator.registerEntities();
+		EntityCreator.registerEntities();
 		
-		//Infection.init();
-		//Bonebreak.init();
+		Infection.init();
+		Bonebreak.init();
 		
-		//proxy.registerRenders();
+		proxy.registerRenders();
 	}
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		
-		//Reference.registerAllPotionEffects();
+		Reference.registerAllPotionEffects();
 		
 		//Register Events
-		//proxy.registerEvents();
+		proxy.registerEvents();
+		
+		ThirstLogic.initThirstDamager();
 		
 	}
 	

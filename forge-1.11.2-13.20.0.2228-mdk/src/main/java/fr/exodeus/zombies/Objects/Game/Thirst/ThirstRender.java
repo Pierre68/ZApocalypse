@@ -47,6 +47,7 @@ public class ThirstRender {
 			int blockx = (int) Math.floor(mc.player.posX);
 			int blocky = (int) (mc.player.posY - mc.player.getYOffset() +1);
 			int blockz = (int) Math.floor(mc.player.posZ);
+			
 			BlockPos block = new BlockPos(blockx, blocky, blockz);
 			if (mc.player.world.getBlockState(block).getMaterial() == Material.WATER)
 				posY = posY - 10;
