@@ -1,0 +1,10 @@
+item.sand_dust.name=Sand Dust
+item.iron_nugget.name=Iron Nugget
+item.clean_chain.name=Chain
+item.rusty_chain.name=Rusty Chain
+item.bandage.name=Bandage
+item.antibiotic.name=Antibiotics
+item.purified_flesh.name=Purified Flesh
+item.cooked_flesh.name=Cooked Flesh
+item.donut.name=Donut
+itemGroup.zombies_tab=Zombies Plus

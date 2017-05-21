@@ -1,0 +1,16 @@
+[
+{
+  "modid": "zombies",
+  "name": "Zombies-plus",
+  "description": "ajoute de nombreux zombies et autres !",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Pierre_68,SalGos,Isentarel"],
+  "credits": "plus de zombies toujours plus !",
+  "logoFile": "logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
