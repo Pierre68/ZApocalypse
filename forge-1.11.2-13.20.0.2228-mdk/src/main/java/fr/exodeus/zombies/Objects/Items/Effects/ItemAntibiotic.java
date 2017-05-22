@@ -1,9 +1,7 @@
 package fr.exodeus.zombies.Objects.Items.Effects;
 
 import fr.exodeus.zombies.Core.MainZombies;
-import fr.exodeus.zombies.Core.Reference;
 import fr.exodeus.zombies.Objects.Potion.Infection;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -14,6 +12,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ItemAntibiotic extends Item {
@@ -30,7 +29,9 @@ public class ItemAntibiotic extends Item {
 
 		if (player.isPotionActive(Infection.infection))
 			if (player.world.isRemote)
-				player.sendMessage(new TextComponentString("§cInfection healed"));
+				return new ActionResult(EnumActionResult.SUCCESS, itemOut);
+		
+		MainZombies.sendPlayerMessage(player, "Infection healed", TextFormatting.RED);
 
 		player.setHealth(player.getHealth() + 1);
 		player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 400, 1)); // regeneration

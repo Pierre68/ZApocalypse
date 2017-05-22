@@ -24,6 +24,9 @@ import fr.exodeus.zombies.Objects.Potion.Infection;
 import fr.exodeus.zombies.Objects.Recipe.Recipes;
 import fr.exodeus.zombies.Objects.Tab.ZombiesTab;
 import fr.exodeus.zombies.Proxy.CommonProxy;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
@@ -37,36 +40,36 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 
 public class MainZombies {
-	
+
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static CommonProxy proxy;
-	
+
 	public SimpleNetworkWrapper network;
-	
+
 	@CapabilityInject(IPlayerExtendedProperties.class)
 	public static final Capability<IPlayerExtendedProperties> CAPABILITY_THIRST = null;
-	
+
 	@Instance
 	public static MainZombies instance;
-	
+
 	public static final Logger logger = LogManager.getLogger(Reference.MOD_NAME);
-	public static void logString(String msg){
+
+	public static void logString(String msg) {
 		logger.log(Level.INFO, msg);
 	}
-	
-	//===============================================================================================================
-	
+
+	// ===============================================================================================================
+
 	public static final ZombiesTab tabZombies = new ZombiesTab();
-	
-	//===============================================================================================================
-	
+
+	// ===============================================================================================================
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		//Simple Items
+		// Simple Items
 		CleanChain.init();
 		CleanChain.register();
 		IronNugget.init();
@@ -75,56 +78,62 @@ public class MainZombies {
 		RustyChain.register();
 		SandDust.init();
 		SandDust.register();
-		//Food Items
+		// Food Items
 		CookedFlesh.init();
 		CookedFlesh.register();
 		Donut.init();
 		Donut.register();
 		PurifiedFlesh.init();
 		PurifiedFlesh.register();
-		//Usable Items
+		// Usable Items
 		Antibiotic.init();
 		Antibiotic.register();
 		Bandage.init();
 		Bandage.register();
-		//Drinks
+		// Drinks
 		PureWater.init();
 		PureWater.register();
-		
-		//Starting Network
+
+		// Starting Network
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
-	
-		//Capabilities
-		network.registerMessage(PacketSyncPlayerData.class, PacketSyncPlayerData.class, PacketSyncPlayerData.ID, Side.CLIENT);
-		
+
+		// Capabilities
+		network.registerMessage(PacketSyncPlayerData.class, PacketSyncPlayerData.class, PacketSyncPlayerData.ID,
+				Side.CLIENT);
+
 		Capabilities.register();
-		
-		
+
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		
+
 		Recipes.loadRecipes();
-		
+
 		EntityCreator.registerEntities();
-		
+
 		Infection.init();
 		Bonebreak.init();
-		
+
 		proxy.registerRenders();
 	}
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		
+
 		Reference.registerAllPotionEffects();
-		
-		//Register Events
+
+		// Register Events
 		proxy.registerEvents();
-		
+
 		ThirstLogic.initThirstDamager();
-		
+
 	}
-	
-	
+
+	public static void sendPlayerMessage(EntityPlayer player, String message, TextFormatting color) {
+		TextComponentString component = new TextComponentString(message);
+		component.getStyle().setColor(color);
+		player.sendMessage(component);
+	}
+
 }

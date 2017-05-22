@@ -12,6 +12,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -115,10 +116,9 @@ public class Bonebreak extends Potion {
 			return;
 
 		if (lvl == 0)
-			player.sendMessage(new TextComponentString("§7You broke your leg use a bandage"));
-
+			MainZombies.sendPlayerMessage(player, "You broke your leg use a bandage", TextFormatting.GRAY);
 		if (lvl != 0)
-			player.sendMessage(new TextComponentString("§7Be careful with your leg"));
+			MainZombies.sendPlayerMessage(player, "Be careful with your leg", TextFormatting.GRAY);
 
 		playerIn.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5000 * (lvl + 1), lvl));
 		playerIn.addPotionEffect(new PotionEffect(Bonebreak.bonebreak, 7000 * (lvl + 1), lvl));

@@ -15,6 +15,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -152,12 +153,12 @@ public class Infection extends Potion {
 
 		if (player.getHealth() == 0)
 			return;
-
+		
 		if (lvl != 0)
-			player.sendMessage(new TextComponentString("§4Your infection is getting worse"));
+			MainZombies.sendPlayerMessage(player, "Your infection is getting worse", TextFormatting.DARK_RED);
 		if (lvl == 0) {
-			player.sendMessage(new TextComponentString("§4You have been infected !"));
-			player.sendMessage(new TextComponentString("§7Take an Antibiotic as fast as possible"));
+			MainZombies.sendPlayerMessage(player, "You have been infected !", TextFormatting.DARK_RED);
+			MainZombies.sendPlayerMessage(player, "Take an Antibiotic as fast as possible", TextFormatting.GRAY);
 		}
 
 		playerIn.addPotionEffect(new PotionEffect(Infection.infection, 10000 * (lvl + 1), lvl));
