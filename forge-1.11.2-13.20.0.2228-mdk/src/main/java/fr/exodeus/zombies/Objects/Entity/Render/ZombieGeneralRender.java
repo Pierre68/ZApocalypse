@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class ZombieNaziRender extends RenderLiving{
+public class ZombieGeneralRender extends RenderLiving{
 
-	public ZombieNaziRender() {
+	public ZombieGeneralRender() {
 		super(Minecraft.getMinecraft().getRenderManager(), new ModelBiped(), 0);
 		
 	}
@@ -17,7 +17,7 @@ public class ZombieNaziRender extends RenderLiving{
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		
-		return new ResourceLocation(Reference.MOD_ID, "textures/entity/zombie_nazi.png");
+		return new ResourceLocation(Reference.MOD_ID, "textures/entity/zombie_general.png");
 	}
 
 }

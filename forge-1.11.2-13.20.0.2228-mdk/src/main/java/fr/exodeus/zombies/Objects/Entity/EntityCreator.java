@@ -7,7 +7,7 @@ import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCivil;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCrawler;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieHerobrine;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieMiner;
-import fr.exodeus.zombies.Objects.Entity.Entities.ZombieNazi;
+import fr.exodeus.zombies.Objects.Entity.Entities.ZombieGeneral;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePolice;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePrisoner;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieSoldier;
@@ -70,7 +70,7 @@ public class EntityCreator {
 				0x4D5246, 0x510000, true);
 		createEntity(ZombieMiner.class, "zombie_miner", EnumCreatureType.MONSTER, 100, 10, 100, biomes, 0x4D5246,
 				0x510000, true);
-		createEntity(ZombieNazi.class, "zombie_nazi", EnumCreatureType.MONSTER, 100, 10, 100, biomes, 0x4D5246,
+		createEntity(ZombieGeneral.class, "zombie_general", EnumCreatureType.MONSTER, 100, 10, 100, biomes, 0x4D5246,
 				0x510000, true);
 		createEntity(ZombiePolice.class, "zombie_police", EnumCreatureType.MONSTER, 100, 10, 100, biomes, 0x4D5246,
 				0x510000, true);

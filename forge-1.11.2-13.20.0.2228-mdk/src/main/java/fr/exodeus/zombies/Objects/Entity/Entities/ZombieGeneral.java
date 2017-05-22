@@ -2,7 +2,7 @@ package fr.exodeus.zombies.Objects.Entity.Entities;
 
 import java.util.Random;
 
-import fr.exodeus.zombies.Objects.Entity.Render.ZombieNaziRender;
+import fr.exodeus.zombies.Objects.Entity.Render.ZombieGeneralRender;
 import fr.exodeus.zombies.Objects.Items.IronNugget;
 import fr.exodeus.zombies.Objects.Items.Usable.Bandage;
 import net.minecraft.block.Block;
@@ -26,9 +26,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ZombieNazi extends EntityMob {
+public class ZombieGeneral extends EntityMob {
 
-	public ZombieNazi(World par1World) {
+	public ZombieGeneral(World par1World) {
 		super(par1World);
 
 		// Zombie Task
@@ -55,7 +55,7 @@ public class ZombieNazi extends EntityMob {
 	
 	@SideOnly(Side.CLIENT)
 	public static void registerRender(){
-		RenderingRegistry.registerEntityRenderingHandler(ZombieNazi.class, new ZombieNaziRender());
+		RenderingRegistry.registerEntityRenderingHandler(ZombieGeneral.class, new ZombieGeneralRender());
 	}
 
 	protected void dropFewItems(boolean par1, int par2) {

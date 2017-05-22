@@ -7,7 +7,7 @@ import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCivil;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCrawler;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieHerobrine;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieMiner;
-import fr.exodeus.zombies.Objects.Entity.Entities.ZombieNazi;
+import fr.exodeus.zombies.Objects.Entity.Entities.ZombieGeneral;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePolice;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePrisoner;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieSoldier;
@@ -78,7 +78,7 @@ public class CommonEvents {
 					|| event.getSource().getEntity() instanceof ZombiePrisoner
 					|| event.getSource().getEntity() instanceof ZombieSurgeon
 					|| event.getSource().getEntity() instanceof ZombieMiner
-					|| event.getSource().getEntity() instanceof ZombieNazi
+					|| event.getSource().getEntity() instanceof ZombieGeneral
 					|| event.getSource().getEntity() instanceof ZombiePolice
 					|| event.getSource().getEntity() instanceof ZombieSoldier
 					|| event.getSource().getEntity() instanceof ZombieCrawler) {

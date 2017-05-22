@@ -10,7 +10,7 @@ import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCivil;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieCrawler;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieHerobrine;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieMiner;
-import fr.exodeus.zombies.Objects.Entity.Entities.ZombieNazi;
+import fr.exodeus.zombies.Objects.Entity.Entities.ZombieGeneral;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePolice;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombiePrisoner;
 import fr.exodeus.zombies.Objects.Entity.Entities.ZombieSoldier;
@@ -63,7 +63,7 @@ public class ClientProxy extends CommonProxy {
 		ZombieCrawler.registerRender();
 		ZombieHerobrine.registerRender();
 		ZombieMiner.registerRender();
-		ZombieNazi.registerRender();
+		ZombieGeneral.registerRender();
 		ZombiePolice.registerRender();
 		ZombiePrisoner.registerRender();
 		ZombieSoldier.registerRender();
